@@ -57,4 +57,8 @@ app.get("/", (req, res) => {
     </html>`);
 });
 
+app.post("/", (req, res) => {
+    res.send("form successfully transmetted !");
+});
+
 app.listen(port);
