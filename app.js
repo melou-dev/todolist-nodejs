@@ -69,11 +69,17 @@ app.get("/", (req, res) => {
     </html>`);
 });
 
-app.post("/", (req, res) => {
-    Item.findAll().then(items => {
-        console.log("All items:", JSON.stringify(items, null, 4));
+app.post("/create-item", (req, res) => {
+  Item.create({
+    item: req.body.item
+  })
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch(err => {
+      console.log(err);
     });
-    res.send("Form successfully transmitted !!!");
 });
+
 
 app.listen(port);
