@@ -1,36 +1,37 @@
-`use strict`;
-
 const express = require("express");
 
 const app = express();
 const port = 4000;
 
+// Models
 const Item = require("./models/Item");
 
+// Database
 const db = require("./config/database");
 
-
+// Test connection database
 db.authenticate()
-    .then(() => {
-      console.log("Connection has been established successfully.");
-    })
-    .catch(err => {
-      console.error("Unable to connect to the database:", err);
-    });
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch(err => {
+    console.error("Unable to connect to the database:", err);
+  });
 
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
 
-app.get("/", (req, res) => {  
-    Item.findAll().then(items => {
-      res.send(`<!DOCTYPE html>
-    <html>
-    <head>
+app.get("/", (req, res) => {
+  Item.findAll().then(items => {
+    res.send(`<!DOCTYPE html>
+      <html>
+      <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Simple To-Do App</title>
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    </head>
-    <body>
+      </head>
+      <body>
       <div class="container">
         <h1 class="display-4 text-center py-1">To-Do App</h1>
         
@@ -44,24 +45,24 @@ app.get("/", (req, res) => {
         </div>
         
         <ul class="list-group pb-5">
-        ${items
-          .map(function(item) {
-            return `
-              <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                <span class="item-text">${item.dataValues.item}</span>
-                <div>
-                  <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                  <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                </div>
-              </li>`;
-          })
-          .join("")}
+          ${items
+            .map(function(item) {
+              return `
+                <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                  <span class="item-text">${item.dataValues.item}</span>
+                  <div>
+                    <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                    <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </li>`;
+            })
+            .join("")}
         </ul>
         
       </div>
-      
-    </body>
-    </html>`);
+      <script src="/js/edit.js"></script>
+      </body>
+      </html>`);
   });
 });
 
@@ -76,6 +77,5 @@ app.post("/", (req, res) => {
       console.log(err);
     });
 });
-
 
 app.listen(port);
