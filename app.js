@@ -4,8 +4,11 @@ const express = require("express");
 
 const app = express();
 const port = 4000;
+
+const Item = require("./models/Item");
+
 const db = require("./config/database");
-const item = require("./models/Item");
+
 
 db.authenticate()
     .then(() => {
@@ -17,7 +20,11 @@ db.authenticate()
 
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => {  
+    Item.findAll().then(items => {
+      console.log(items);
+    });
+
     res.send(`<!DOCTYPE html>
     <html>
     <head>
@@ -69,7 +76,7 @@ app.get("/", (req, res) => {
     </html>`);
 });
 
-app.post("/create-item", (req, res) => {
+app.post("/", (req, res) => {
   Item.create({
     item: req.body.item
   })
