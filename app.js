@@ -82,7 +82,7 @@ app.post("/", (req, res) => {
 
 app.post("/update-item", (req, res) => {
   console.log(req.body.itemUpdated);
-  res.send("success");
+  res.send("Success");
 });
 
 app.listen(port);
